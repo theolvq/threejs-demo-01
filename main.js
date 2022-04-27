@@ -30,16 +30,29 @@ const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
 
 // Create a sphere geometry
-const sphere = new THREE.SphereGeometry(5, 10, 10);
+const sphere = new THREE.TorusGeometry(10, 3, 16, 100);
 // give it a material (color or texture)
 const material = new THREE.MeshBasicMaterial({
-  color: 0x00ffff,
+  color: '#FFCC08',
   wireframe: true,
 });
 // combine the geometry and material into a mesh
 const mesh = new THREE.Mesh(sphere, material);
+mesh.position.x = -100;
+mesh.position.y = -50;
+mesh.setRotationFromEuler(new THREE.Euler(0, 1, 0.5, 'XYZ'));
 // add the mesh to the scene
 scene.add(mesh);
+const geometry = new THREE.SphereGeometry(100, 100, 100);
+
+const wireframe = new THREE.WireframeGeometry(geometry);
+
+const line = new THREE.LineSegments(wireframe);
+line.material.depthTest = false;
+line.material.opacity = 0.25;
+line.material.transparent = true;
+
+scene.add(line);
 
 // Create a camera
 const camera = new THREE.PerspectiveCamera(
@@ -52,7 +65,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.x = 1;
 camera.position.y = 1;
 // Move the camera back a bit
-camera.position.z = 30;
+camera.position.z = 500;
 scene.add(camera);
 
 // Controls
@@ -61,7 +74,6 @@ controls.enableDamping = true;
 
 // Create a renderer
 const renderer = new THREE.WebGLRenderer({ canvas });
-console.log(renderer);
 // Set the size of the renderer
 renderer.setSize(sizes.width, sizes.height);
 // Set the pixel ratio
